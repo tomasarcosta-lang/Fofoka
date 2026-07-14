@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FOFOKAS — Edição Exclusiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg: #170b1f;
+  --bg2: #23112e;
+  --paper: #fdf6e9;
+  --paper2: #f3e8d0;
+  --pink: #ff3d81;
+  --pink-deep: #c91861;
+  --gold: #ffd23f;
+  --ink: #241226;
+  --muted: #a892b3;
+  --line: rgba(255,255,255,0.08);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  background:
+    radial-gradient(circle at 15% 0%, #3a1a4a 0%, transparent 45%),
+    radial-gradient(circle at 90% 100%, #2b1338 0%, transparent 50%),
+    var(--bg);
+  min-height:100vh;
+  font-family:'Inter', sans-serif;
+  color: var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+
+.hidden{ display:none !important; }
+
+/* ---------- LOGIN ---------- */
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.login-card{
+  width:100%;
+  max-width:380px;
+  text-align:center;
+}
+.stamp{
+  display:inline-block;
+  transform: rotate(-4deg);
+  margin-bottom:36px;
+}
+.stamp h1{
+  font-family:'Anton', sans-serif;
+  font-size:56px;
+  letter-spacing:2px;
+  color:var(--gold);
+  text-shadow: 3px 3px 0 var(--pink-deep);
+  line-height:0.9;
+}
+.stamp span{
+  display:block;
+  font-family:'Inter', sans-serif;
+  font-size:11px;
+  letter-spacing:5px;
+  color:var(--pink);
+  margin-top:8px;
+  font-weight:700;
+}
+.login-card form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.login-card input{
+  background: var(--bg2);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:16px;
+  color:var(--paper);
+  font-size:15px;
+  font-family:'Inter', sans-serif;
+  letter-spacing:1px;
+  text-align:center;
+}
+.login-card input::placeholder{ color:var(--muted); letter-spacing:0.5px; }
+.login-card input:focus{ outline:2px solid var(--pink); outline-offset:2px; }
+.seal-btn{
+  background: var(--pink);
+  color: var(--ink);
+  border:none;
+  border-radius: 999px;
+  padding:16px;
+  font-weight:800;
+  font-size:14px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition: transform .15s ease, background .15s ease;
+}
+.seal-btn:hover{ background: var(--gold); transform: translateY(-2px); }
+.seal-btn:active{ transform: translateY(0); }
+.login-error{
+  color: var(--gold);
+  font-size:13px;
+  min-height:18px;
+  font-weight:600;
+}
+.login-hint{
+  margin-top:22px;
+  font-size:12px;
+  color: var(--muted);
+}
+
+/* ---------- APP SHELL ---------- */
+#app{ min-height:100vh; display:flex; flex-direction:column; }
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 20px;
+  border-bottom:1px solid var(--line);
+  position:sticky; top:0;
+  background: rgba(23,11,31,0.9);
+  backdrop-filter: blur(8px);
+  z-index:20;
+}
+.brand{
+  font-family:'Anton', sans-serif;
+  font-size:22px;
+  letter-spacing:1px;
+  color:var(--gold);
+  transform: rotate(-2deg);
+  display:inline-block;
+}
+.who{ font-size:12px; color:var(--muted); }
+.who b{ color: var(--pink); }
+.logout-link{
+  background:none; border:none; color:var(--muted);
+  font-size:12px; cursor:pointer; text-decoration:underline;
+  font-family:'Inter',sans-serif;
+}
+
+.tabs{
+  display:flex;
+  gap:0;
+  padding:0 20px;
+  border-bottom:1px solid var(--line);
+  position:sticky; top:57px; z-index:19;
+  background: var(--bg);
+}
+.tab-btn{
+  background:none; border:none;
+  color: var(--muted);
+  padding:14px 6px;
+  margin-right:26px;
+  font-family:'Inter',sans-serif;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+}
+.tab-btn.active{ color: var(--paper); border-bottom-color: var(--pink); }
+
+main{
+  flex:1;
+  width:100%;
+  max-width:640px;
+  margin:0 auto;
+  padding:20px 16px 100px;
+}
+
+/* ---------- COMPOSE ---------- */
+.compose{
+  background: var(--bg2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:26px;
+}
+.compose textarea{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:var(--paper);
+  font-family:'Inter', sans-serif;
+  font-size:15px;
+  resize:vertical;
+  min-height:70px;
+}
+.compose textarea:focus{ outline:none; }
+.compose-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+.img-label{
+  display:flex; align-items:center; gap:8px;
+  color:var(--muted); font-size:12px; cursor:pointer;
+}
+.img-label input{ display:none; }
+.preview-thumb{
+  height:32px; border-radius:6px; margin-left:8px;
+}
+.publish-btn{
+  background: var(--pink);
+  color: var(--ink);
+  border:none;
+  border-radius:999px;
+  padding:10px 22px;
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.publish-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+/* ---------- FEED ---------- */
+#feed{ display:flex; flex-direction:column; gap:22px; }
+.card{
+  background: var(--paper);
+  color: var(--ink);
+  border-radius:3px;
+  padding:18px 18px 16px;
+  position:relative;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+.card:nth-child(3n+1){ transform: rotate(-1.1deg); }
+.card:nth-child(3n+2){ transform: rotate(0.9deg); }
+.card:nth-child(3n){ transform: rotate(-0.4deg); }
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:8px;
+  border-bottom:2px dashed var(--paper2);
+  padding-bottom:8px;
+}
+.card-name{
+  font-weight:800;
+  font-size:14px;
+  color: var(--pink-deep);
+}
+.card-date{ font-size:11px; color:#8a7a63; }
+.card-text{
+  font-size:15px;
+  line-height:1.5;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.card-img{
+  width:100%;
+  border-radius:4px;
+  margin-top:10px;
+  display:block;
+}
+.stamp-badge{
+  position:absolute;
+  top:-10px; right:-6px;
+  background: var(--gold);
+  color: var(--ink);
+  font-family:'Anton', sans-serif;
+  font-size:11px;
+  letter-spacing:1px;
+  padding:5px 10px;
+  border-radius:3px;
+  transform: rotate(8deg);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.empty-state{
+  text-align:center;
+  color:var(--muted);
+  padding:60px 20px;
+  font-size:14px;
+}
+
+/* ---------- CHAT ---------- */
+#chatBox{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:16px;
+}
+.msg{
+  max-width:78%;
+  padding:10px 14px;
+  border-radius:14px;
+  font-size:14px;
+  line-height:1.4;
+  background: var(--bg2);
+  border:1px solid var(--line);
+  align-self:flex-start;
+}
+.msg.me{
+  align-self:flex-end;
+  background: var(--pink-deep);
+  color:#fff;
+}
+.msg .msg-name{
+  display:block;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color: var(--gold);
+  margin-bottom:3px;
+}
+.msg.me .msg-name{ color: rgba(255,255,255,0.75); }
+
+.chat-input-bar{
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background: rgba(23,11,31,0.95);
+  backdrop-filter: blur(8px);
+  border-top:1px solid var(--line);
+  padding:12px 16px;
+  display:flex;
+  gap:10px;
+  z-index:20;
+}
+.chat-input-bar input{
+  flex:1;
+  background: var(--bg2);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:12px 16px;
+  color:var(--paper);
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+}
+.chat-input-bar input:focus{ outline:none; border-color:var(--pink); }
+.send-btn{
+  background: var(--pink);
+  color: var(--ink);
+  border:none;
+  border-radius:999px;
+  width:44px; height:44px;
+  font-weight:800;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+/* ---------- NAME MODAL ---------- */
+#nameOverlay{
+  position:fixed; inset:0;
+  background: rgba(10,4,14,0.85);
+  display:flex; align-items:center; justify-content:center;
+  z-index:50;
+  padding:24px;
+}
+.name-modal{
+  background: var(--bg2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:28px;
+  width:100%; max-width:340px;
+  text-align:center;
+}
+.name-modal h2{
+  font-family:'Anton', sans-serif;
+  color: var(--gold);
+  font-size:22px;
+  margin-bottom:6px;
+}
+.name-modal p{ color:var(--muted); font-size:13px; margin-bottom:18px; }
+.name-modal input{
+  width:100%;
+  background: var(--bg);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:14px;
+  color:var(--paper);
+  text-align:center;
+  margin-bottom:14px;
+  font-family:'Inter',sans-serif;
+}
+
+.toast{
+  position:fixed;
+  bottom:80px; left:50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--ink);
+  padding:10px 18px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  z-index:60;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4);
+}
+
+@media (min-width:700px){
+  .stamp h1{ font-size:64px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="stamp">
+      <h1>FOFOKAS</h1>
+      <span>ACESSO RESTRITO</span>
+    </div>
+    <form id="loginForm">
+      <input type="password" id="passwordInput" placeholder="Palavra-passe secreta" autocomplete="off" required>
+      <button type="submit" class="seal-btn">Selar entrada</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+    <div class="login-hint">Só entra quem sabe a senha. Shhh.</div>
+  </div>
+</div>
+
+<!-- ================= NAME MODAL ================= -->
+<div id="nameOverlay" class="hidden">
+  <div class="name-modal">
+    <h2>Quem fala?</h2>
+    <p>Escolhe o nome com que vais assinar as tuas fofocas.</p>
+    <input type="text" id="nameInput" placeholder="O teu nome" maxlength="20">
+    <button class="seal-btn" id="nameSaveBtn" style="width:100%;">Confirmar</button>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" class="hidden">
+  <div class="topbar">
+    <div class="brand">FOFOKAS</div>
+    <div>
+      <span class="who">a fofocar como <b id="whoName"></b></span>
+      &nbsp;·&nbsp;
+      <button class="logout-link" id="logoutBtn">sair</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="fofocas">Fofocas</button>
+    <button class="tab-btn" data-tab="chat">Chat</button>
+  </div>
+
+  <main>
+    <!-- FOFOCAS TAB -->
+    <section id="tab-fofocas">
+      <div class="compose">
+        <textarea id="fofocaText" placeholder="O que é que se passou?? Conta tudo..."></textarea>
+        <div class="compose-footer">
+          <label class="img-label">
+            📷 Adicionar foto
+            <input type="file" id="fofocaImg" accept="image/*">
+            <img id="fofocaPreview" class="preview-thumb hidden">
+          </label>
+          <button class="publish-btn" id="publishBtn">Publicar</button>
+        </div>
+      </div>
+      <div id="feed"></div>
+    </section>
+
+    <!-- CHAT TAB -->
+    <section id="tab-chat" class="hidden">
+      <div id="chatBox"></div>
+    </section>
+  </main>
+
+  <div class="chat-input-bar hidden" id="chatBar">
+    <input type="text" id="chatInput" placeholder="Escreve uma mensagem...">
+    <button class="send-btn" id="chatSendBtn">➤</button>
+  </div>
+</div>
+
+<script>
+/* =================== CONFIGURAÇÃO =================== */
+const PASSWORD = "01235467890@€aE";
+
+const CLOUDINARY_CLOUD_NAME = "dvl0ud1p0";
+const CLOUDINARY_UPLOAD_PRESET = "Fofokas";
+
+const JSONBIN_API_KEY = "$2a$10$xhvdHbsEN4tQLqXRBlVEn.LpyL1tkcoifG5MRWjehZXLNZEpQSJ1K";
+// Depois de abrires a app pela 1ª vez, é criado automaticamente um "bin".
+// Copia o ID que aparece no aviso amarelo e cola-o aqui em baixo entre aspas,
+// para que TODOS os teus amigos usem sempre o mesmo bin (a mesma "caixa" de dados).
+let JSONBIN_BIN_ID = "6a56b9f5f5f4af5e298fbda4";
+
+const POLL_INTERVAL_MS = 6000;
+
+/* =================== ESTADO =================== */
+let myName = localStorage.getItem('fofokas_name') || '';
+let currentTab = 'fofocas';
+let pendingImageDataUrl = null;
+let pendingImageFile = null;
+let pollTimer = null;
+let lastDataString = '';
+
+const $ = (id) => document.getElementById(id);
+
+/* =================== LOGIN =================== */
+$('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const val = $('passwordInput').value;
+  if(val === PASSWORD){
+    sessionStorage.setItem('fofokas_authed', '1');
+    enterApp();
+  } else {
+    $('loginError').textContent = 'Senha errada. Tenta outra vez, bisbilhoteiro(a).';
+    $('passwordInput').value = '';
+  }
+});
+
+function enterApp(){
+  $('loginScreen').classList.add('hidden');
+  if(!myName){
+    $('nameOverlay').classList.remove('hidden');
+  } else {
+    startApp();
+  }
+}
+
+$('nameSaveBtn').addEventListener('click', saveName);
+$('nameInput').addEventListener('keydown', (e) => { if(e.key === 'Enter') saveName(); });
+
+function saveName(){
+  const v = $('nameInput').value.trim();
+  if(!v) return;
+  myName = v.slice(0, 20);
+  localStorage.setItem('fofokas_name', myName);
+  $('nameOverlay').classList.add('hidden');
+  startApp();
+}
+
+$('logoutBtn').addEventListener('click', function(){
+  sessionStorage.removeItem('fofokas_authed');
+  clearInterval(pollTimer);
+  location.reload();
+});
+
+function startApp(){
+  $('whoName').textContent = myName;
+  $('app').classList.remove('hidden');
+  loadAndRender();
+  pollTimer = setInterval(loadAndRender, POLL_INTERVAL_MS);
+}
+
+// Se já estava autenticado nesta sessão (ex: recarregou a página)
+if(sessionStorage.getItem('fofokas_authed') === '1'){
+  $('loginScreen').classList.add('hidden');
+  if(myName){ startApp(); } else { $('nameOverlay').classList.remove('hidden'); }
+}
+
+/* =================== TABS =================== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentTab = this.dataset.tab;
+    $('tab-fofocas').classList.toggle('hidden', currentTab !== 'fofocas');
+    $('tab-chat').classList.toggle('hidden', currentTab !== 'chat');
+    $('chatBar').classList.toggle('hidden', currentTab !== 'chat');
+  });
+});
+
+/* =================== JSONBIN =================== */
+async function ensureBin(){
+  let stored = localStorage.getItem('fofokas_bin_id');
+  if(JSONBIN_BIN_ID){ return JSONBIN_BIN_ID; }
+  if(stored){ JSONBIN_BIN_ID = stored; return stored; }
+
+  // cria um bin novo, vazio
+  const res = await fetch('https://api.jsonbin.io/v3/b', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'X-Master-Key': JSONBIN_API_KEY,
+      'X-Bin-Name': 'fofokas-data'
+    },
+    body: JSON.stringify({ fofocas: [], chat: [] })
+  });
+  const json = await res.json();
+  const id = json.metadata.id;
+  JSONBIN_BIN_ID = id;
+  localStorage.setItem('fofokas_bin_id', id);
+  showToast('Bin criado! Cola este ID no código: ' + id, 15000);
+  console.log('FOFOKAS BIN ID (cola no código, na variável JSONBIN_BIN_ID):', id);
+  return id;
+}
+
+async function fetchData(){
+  const id = await ensureBin();
+  const res = await fetch('https://api.jsonbin.io/v3/b/' + id + '/latest', {
+    headers:{ 'X-Master-Key': JSONBIN_API_KEY }
+  });
+  const json = await res.json();
+  const record = json.record || { fofocas: [], chat: [] };
+  if(!record.fofocas) record.fofocas = [];
+  if(!record.chat) record.chat = [];
+  return record;
+}
+
+async function putData(data){
+  const id = await ensureBin();
+  await fetch('https://api.jsonbin.io/v3/b/' + id, {
+    method:'PUT',
+    headers:{
+      'Content-Type':'application/json',
+      'X-Master-Key': JSONBIN_API_KEY
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+async function loadAndRender(){
+  try{
+    const data = await fetchData();
+    const dataString = JSON.stringify(data);
+    if(dataString === lastDataString) return; // nada mudou, não repinta
+    lastDataString = dataString;
+    renderFeed(data.fofocas);
+    renderChat(data.chat);
+  }catch(err){
+    console.error('Erro ao carregar dados:', err);
+  }
+}
+
+/* =================== CLOUDINARY =================== */
+async function uploadImage(file){
+  const form = new FormData();
+  form.append('file', file);
+  form.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  const res = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', {
+    method:'POST',
+    body: form
+  });
+  const json = await res.json();
+  if(!json.secure_url){ throw new Error('Falha no upload da imagem'); }
+  return json.secure_url;
+}
+
+/* =================== FOFOCAS =================== */
+$('fofocaImg').addEventListener('change', function(){
+  const file = this.files[0];
+  if(!file) return;
+  pendingImageFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    pendingImageDataUrl = e.target.result;
+    $('fofocaPreview').src = pendingImageDataUrl;
+    $('fofocaPreview').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+});
+
+$('publishBtn').addEventListener('click', async function(){
+  const text = $('fofocaText').value.trim();
+  if(!text && !pendingImageFile){ return; }
+
+  $('publishBtn').disabled = true;
+  $('publishBtn').textContent = 'A publicar...';
+
+  try{
+    let imageUrl = null;
+    if(pendingImageFile){
+      imageUrl = await uploadImage(pendingImageFile);
+    }
+    const data = await fetchData();
+    data.fofocas.unshift({
+      id: Date.now() + '-' + Math.random().toString(36).slice(2,8),
+      name: myName,
+      text: text,
+      image: imageUrl,
+      date: new Date().toISOString(),
+      exclusivo: Math.random() < 0.35
+    });
+    await putData(data);
+
+    $('fofocaText').value = '';
+    $('fofocaImg').value = '';
+    $('fofocaPreview').classList.add('hidden');
+    pendingImageFile = null;
+    pendingImageDataUrl = null;
+
+    lastDataString = '';
+    await loadAndRender();
+    showToast('Fofoca publicada 🔥');
+  }catch(err){
+    console.error(err);
+    showToast('Ups, não deu para publicar. Tenta outra vez.');
+  }finally{
+    $('publishBtn').disabled = false;
+    $('publishBtn').textContent = 'Publicar';
+  }
+});
+
+function renderFeed(fofocas){
+  const feed = $('feed');
+  if(!fofocas || fofocas.length === 0){
+    feed.innerHTML = '<div class="empty-state">Ainda não há fofocas. Sê a primeira pessoa a abrir o jogo 👀</div>';
+    return;
+  }
+  feed.innerHTML = '';
+  fofocas.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    if(f.exclusivo){
+      const badge = document.createElement('div');
+      badge.className = 'stamp-badge';
+      badge.textContent = 'EXCLUSIVO';
+      card.appendChild(badge);
+    }
+
+    const head = document.createElement('div');
+    head.className = 'card-head';
+    const name = document.createElement('span');
+    name.className = 'card-name';
+    name.textContent = f.name || 'Anónimo';
+    const date = document.createElement('span');
+    date.className = 'card-date';
+    date.textContent = formatDate(f.date);
+    head.appendChild(name);
+    head.appendChild(date);
+    card.appendChild(head);
+
+    if(f.text){
+      const p = document.createElement('div');
+      p.className = 'card-text';
+      p.textContent = f.text;
+      card.appendChild(p);
+    }
+
+    if(f.image){
+      const img = document.createElement('img');
+      img.className = 'card-img';
+      img.src = f.image;
+      img.loading = 'lazy';
+      card.appendChild(img);
+    }
+
+    feed.appendChild(card);
+  });
+}
+
+/* =================== CHAT =================== */
+$('chatSendBtn').addEventListener('click', sendChat);
+$('chatInput').addEventListener('keydown', (e) => { if(e.key === 'Enter') sendChat(); });
+
+async function sendChat(){
+  const text = $('chatInput').value.trim();
+  if(!text) return;
+  $('chatInput').value = '';
+  try{
+    const data = await fetchData();
+    data.chat.push({
+      id: Date.now() + '-' + Math.random().toString(36).slice(2,8),
+      name: myName,
+      text: text,
+      date: new Date().toISOString()
+    });
+    await putData(data);
+    lastDataString = '';
+    await loadAndRender();
+  }catch(err){
+    console.error(err);
+    showToast('Não foi possível enviar a mensagem.');
+  }
+}
+
+function renderChat(chat){
+  const box = $('chatBox');
+  box.innerHTML = '';
+  if(!chat || chat.length === 0){
+    box.innerHTML = '<div class="empty-state">Ainda ninguém disse nada aqui. Quebra o gelo!</div>';
+    return;
+  }
+  chat.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'msg' + (m.name === myName ? ' me' : '');
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'msg-name';
+    nameSpan.textContent = m.name || 'Anónimo';
+    div.appendChild(nameSpan);
+    const textNode = document.createTextNode(m.text);
+    div.appendChild(textNode);
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+/* =================== HELPERS =================== */
+function formatDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-PT', {day:'2-digit', month:'2-digit'}) + ' ' +
+         d.toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+}
+
+let toastTimer = null;
+function showToast(msg, duration){
+  duration = duration || 3000;
+  clearTimeout(toastTimer);
+  let toast = document.querySelector('.toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toastTimer = setTimeout(() => toast.remove(), duration);
+}
+</script>
+</body>
+</html>
